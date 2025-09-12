@@ -83,24 +83,48 @@ public:
 };
 
 int main() {
-    LogFileManager manager;
-    manager.openLogFile("error.log");
-    manager.openLogFile("debug.log");
-    manager.openLogFile("info.log");
+    try {
+        LogFileManager manager;
+        manager.openLogFile("error.log");
+        manager.openLogFile("debug.log");
+        manager.openLogFile("info.log");
 
-    manager.writeLog("error.log", "Database connection failed");
-    manager.writeLog("debug.log", "User login attempt");
-    manager.writeLog("info.log", "Server started successfully");
+        manager.writeLog("error.log", "Database connection failed");
+        manager.writeLog("error.log", "Database connection failed2");
+        manager.writeLog("error.log", "Database connection failed3");
+        manager.writeLog("debug.log", "User login attempt");
+        manager.writeLog("info.log", "Server started successfully");
 
-    std::vector<std::string> errorLogs = manager.readLogs("error.log");
-    
-    for (const auto& line : errorLogs) {
-        
+        std::vector<std::string> errorLogs = manager.readLogs("error.log");
+        std::vector<std::string> debugLogs = manager.readLogs("debug.log");
+        std::vector<std::string> infoLogs = manager.readLogs("info.log");
+
+        // 로그 출력 추가
+        for (const auto& line : errorLogs) {
+            std::cout << line << std::endl; 
+        }
+        for (const auto& line : debugLogs) {
+            std::cout << line << std::endl; 
+        }
+        for (const auto& line : infoLogs) {
+            std::cout << line << std::endl;
+        }
+
+        manager.closeLogFile("error.log");
+        manager.closeLogFile("debug.log");
+        manager.closeLogFile("info.log");
+    } catch (const std::exception& ex) {
+        std::cerr << "오류 발생: " << ex.what() << std::endl;
+        return 1;
     }
-
-    manager.closeLogFile("error.log");
-    manager.closeLogFile("debug.log");
-    manager.closeLogFile("info.log");
+    while(1){
+        // 무한 루프
+        //q: 종료
+        char c = std::cin.get();
+        if(c == 'q'){
+            break;
+        }
+    }
     return 0;
 }
 
