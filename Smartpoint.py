@@ -11,7 +11,7 @@ class LogFileManager:
     #로그 파일 열기
     def openLogFile(self, filename: str):
         with self._Lock:
-            if filename not in self.files:
+            if filename not in self._files:
                 try:
                     f = open(filename, 'a', encoding='utf-8')
                     self._files[filename] = f
@@ -33,6 +33,7 @@ class LogFileManager:
     #로그 파일 읽기
     def readLogs(self, filename: str):
         pass
+
 
     #로그 파일 닫기
     def closeLogFile(self, filename: str):
