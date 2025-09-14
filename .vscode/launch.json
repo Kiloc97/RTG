@@ -34,6 +34,25 @@
             "taskDetail": "디버거에서 생성된 작업입니다.",
             "taskStatus": "Recently Used Task",
             "isDefault": true
+        },
+
+        {
+            "name": "Python Debugger: Flask",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "flask",
+            "env": {
+                "FLASK_APP": "app.py",
+                "FLASK_DEBUG": "1"
+            },
+            "args": [
+                "run",
+                "--no-debugger",
+                "--no-reload"
+            ],
+            "jinja": true,
+            "justMyCode": true
         }
+
     ]
 }
