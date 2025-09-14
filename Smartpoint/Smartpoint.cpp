@@ -11,10 +11,10 @@
 
 class LogFileManager {
 private:
-    // íŒŒì¼ ì´ë¦„ë³„ ofstream ìŠ¤ë§ˆíŠ¸ í¬ì¸í„° ê´€ë¦¬
+    // ÆÄÀÏ ÀÌ¸§º° ofstream ½º¸¶Æ® Æ÷ÀÎÅÍ °ü¸®
     std::map<std::string, std::unique_ptr<std::ofstream>> fileMap;
 
-    // íƒ€ì„ìŠ¤íƒ¬í”„ ìƒì„± í•¨ìˆ˜
+    // Å¸ÀÓ½ºÅÆÇÁ »ı¼º ÇÔ¼ö
     std::string currentTimestamp() {
         std::ostringstream oss;
         auto t = std::time(nullptr);
@@ -26,7 +26,7 @@ private:
 public:
     LogFileManager() = default;
     ~LogFileManager() {
-        // ëª¨ë“  íŒŒì¼ì„ ì•ˆì „í•˜ê²Œ ë‹«ê¸°
+        // ¸ğµç ÆÄÀÏÀ» ¾ÈÀüÇÏ°Ô ´İ±â
         for (auto& pair : fileMap) {
             if (pair.second && pair.second->is_open()) {
                 pair.second->close();
@@ -34,36 +34,36 @@ public:
         }
     }
 
-    // ë³µì‚¬/ì´ë™ ê¸ˆì§€
+    // º¹»ç/ÀÌµ¿ ±İÁö
     LogFileManager(const LogFileManager&) = delete;
     LogFileManager& operator=(const LogFileManager&) = delete;
 
-    // ë¡œê·¸ íŒŒì¼ ì—´ê¸°
+    // ·Î±× ÆÄÀÏ ¿­±â
     void openLogFile(const std::string& filename) {
         if (fileMap.count(filename) == 0) {
             auto ofs = std::make_unique<std::ofstream>(filename, std::ios::app);
             if (!ofs->is_open()) {
-                throw std::runtime_error("íŒŒì¼ ì—´ê¸° ì‹¤íŒ¨: " + filename);
+                throw std::runtime_error("ÆÄÀÏ ¿­±â ½ÇÆĞ: " + filename);
             }
             fileMap[filename] = std::move(ofs);
         }
     }
 
-    // ë¡œê·¸ íŒŒì¼ì— ë©”ì‹œì§€ ì“°ê¸° (íƒ€ì„ìŠ¤íƒ¬í”„ í¬í•¨)
+    // ·Î±× ÆÄÀÏ¿¡ ¸Ş½ÃÁö ¾²±â (Å¸ÀÓ½ºÅÆÇÁ Æ÷ÇÔ)
     void writeLog(const std::string& filename, const std::string& message) {
         auto it = fileMap.find(filename);
         if (it == fileMap.end() || !it->second || !it->second->is_open()) {
-            throw std::runtime_error("íŒŒì¼ì´ ì—´ë ¤ìˆì§€ ì•ŠìŠµë‹ˆë‹¤: " + filename);
+            throw std::runtime_error("ÆÄÀÏÀÌ ¿­·ÁÀÖÁö ¾Ê½À´Ï´Ù: " + filename);
         }
         *(it->second) << currentTimestamp() << " " << message << std::endl;
     }
 
-    // ë¡œê·¸ íŒŒì¼ì—ì„œ ì „ì²´ ë¼ì¸ë“¤ì„ vectorë¡œ ë°˜í™˜
+    // ·Î±× ÆÄÀÏ¿¡¼­ ÀüÃ¼ ¶óÀÎµéÀ» vector·Î ¹İÈ¯
     std::vector<std::string> readLogs(const std::string& filename) {
         std::vector<std::string> result;
         std::ifstream ifs(filename);
         if (!ifs.is_open()) {
-            throw std::runtime_error("íŒŒì¼ ì½ê¸° ì‹¤íŒ¨: " + filename);
+            throw std::runtime_error("ÆÄÀÏ ÀĞ±â ½ÇÆĞ: " + filename);
         }
         std::string line;
         while (std::getline(ifs, line)) {
@@ -72,7 +72,7 @@ public:
         return result;
     }
 
-    // ë¡œê·¸ íŒŒì¼ ë‹«ê¸°
+    // ·Î±× ÆÄÀÏ ´İ±â
     void closeLogFile(const std::string& filename) {
         auto it = fileMap.find(filename);
         if (it != fileMap.end() && it->second && it->second->is_open()) {
@@ -99,7 +99,7 @@ int main() {
         std::vector<std::string> debugLogs = manager.readLogs("debug.log");
         std::vector<std::string> infoLogs = manager.readLogs("info.log");
 
-        // ë¡œê·¸ ì¶œë ¥ ì¶”ê°€
+        // ·Î±× Ãâ·Â Ãß°¡
         for (const auto& line : errorLogs) {
             std::cout << line << std::endl; 
         }
@@ -114,12 +114,13 @@ int main() {
         manager.closeLogFile("debug.log");
         manager.closeLogFile("info.log");
     } catch (const std::exception& ex) {
-        std::cerr << "ì˜¤ë¥˜ ë°œìƒ: " << ex.what() << std::endl;
+        std::cerr << "¿À·ù ¹ß»ı: " << ex.what() << std::endl;
         return 1;
     }
+    
     while(1){
-        // ë¬´í•œ ë£¨í”„
-        //q: ì¢…ë£Œ
+        // ¹«ÇÑ ·çÇÁ
+        //q: Á¾·á
         char c = std::cin.get();
         if(c == 'q'){
             break;
