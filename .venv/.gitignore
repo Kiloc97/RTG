@@ -1,0 +1,22 @@
+*# Build files
+*.exe
+*.o
+*.obj
+
+# VS Code settings (optional - 개발 환경을 공유하려면 주석 처리)
+.vscode/
+
+# 면접 과제 파일
+*면접전*과제*
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
